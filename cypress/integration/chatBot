@@ -1,0 +1,44 @@
+//Es un ejemplo de como puedo implementar un caso de prueba con bot
+
+describe('Chatbot Interaction Test', () => {
+
+  it('should navigate to the correct URL', () => {
+    cy.visit('URL EJEMPLO'); 
+    cy.url().should('include', 'url'); 
+  });
+
+  it('should find the chatbot component and interact with its iframe', () => {
+    cy.get('.chatbot-button').click();
+    cy.get('iframe')
+      .its('0.contentDocument.body').should('not.be.empty')
+      .then(cy.wrap)
+      .as('chatbotIframe');
+    cy.get('@chatbotIframe').find('.bot-name')
+      .should('be.visible')
+      .and('contain', 'Nombre del Bot'); 
+  });
+
+
+  it('should type "Hola" and send the message', () => {
+    cy.get('iframe')
+      .its('0.contentDocument.body').should('not.be.empty')
+      .then(cy.wrap)
+      .as('chatbotIframe');
+    cy.get('@chatbotIframe').find('.chatbot-input')
+      .type('Hola');
+    cy.get('@chatbotIframe').find('.send-button')
+      .click();
+  });
+
+
+  it('should receive a correct response from the chatbot', () => {
+    cy.get('iframe')
+      .its('0.contentDocument.body').should('not.be.empty')
+      .then(cy.wrap)
+      .as('chatbotIframe');
+    cy.get('@chatbotIframe').find('.bot-response')
+      .should('be.visible')
+      .and('contain', '¡Hola! ¿En qué puedo ayudarte?'); 
+  });
+
+});
